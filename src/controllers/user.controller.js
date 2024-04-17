@@ -20,7 +20,7 @@ async function registerUser(req, res, next) {
         else {
             const newPerson = new userModel(userData);
             await newPerson.save();
-            return res.status(StatusCodes.OK).json({
+            return res.status(StatusCodes.CREATED).json({
                 success: true,
                 message: 'User created successfully',
                 error: {},
@@ -78,9 +78,33 @@ async function loginUser(req, res, next) {
     }
 }
 
+//User profile
+async function userProfile(req, res, next) {
 
+    try {
+        const userId = req.params.id
+
+        const findUserProfile = await userModel.findOne({ _id: userId });
+
+        if (!findUserProfile) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                status: false,
+                message: "Profile Not Found "
+            })
+        }
+        return res.status(StatusCodes.OK).json({
+            status: true,
+            message: "Profile data found",
+            data: findUserProfile
+        })
+    } catch (error) {
+        next(error);
+    }
+
+}
 
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    userProfile
 }
