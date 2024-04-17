@@ -32,8 +32,55 @@ async function registerUser(req, res, next) {
     }
 }
 
+//LOGIN USER
+async function loginUser(req, res, next) {
+    try {
+        const { username, email } = req.body;
+
+        //if user and email is empty
+        if (!username) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                status: false,
+                message: 'Username cannot be Empty'
+            });
+        }
+        if (!email) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                status: false,
+                message: 'Email cannot be Empty'
+            });
+        }
+
+        ////finding user's details in db
+        const finduser = await userModel.findOne({ username })
+        const findemail = await userModel.findOne({ email })
+
+        if (!finduser) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                status: false,
+                message: 'Username not exist'
+            });
+        }
+        if (!findemail) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                status: false,
+                message: 'Gmail not exist'
+            });
+        }
+
+        return res.status(StatusCodes.OK).json({
+            message: "login sucessfully"
+
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
 
 
 module.exports = {
-    registerUser
+    registerUser,
+    loginUser
 }
