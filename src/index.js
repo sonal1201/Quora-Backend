@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyparser = require('body-parser');
 const { PORT } = require('./config/server.config');
+const connectDB = require('./config/db.config');
 const app = express();
 
 //Body-parsers...
@@ -16,4 +17,6 @@ app.use('/', (req, res) => {
 
 app.listen(PORT, async () => {
     console.log(`Port started listening ${PORT}`)
+    await connectDB();
+    console.log("Succesfully Connected to db");
 })
